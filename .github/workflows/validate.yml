@@ -1,0 +1,40 @@
+name: Validate Schema & E2E Smoke
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install OpenSpec CLI
+        run: npm install -g @fission-ai/openspec@1.14.0
+
+      - name: Run E2E verification (PowerShell on Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/verify.ps1
+
+      - name: Run E2E verification (Bash on Ubuntu)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: bash ./scripts/verify.sh

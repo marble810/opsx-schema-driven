@@ -75,20 +75,20 @@ OpenSpec `1.14.0` 的状态机对声明在 `schema.yaml` 中的所有 artifact �
 2. 方向键 + 空格多选需要启用的 Agent，执行 `openspec init`；
 3. 将 `proposal-driven` Schema 安装到项目目录（或本机全局目录），并自动把项目 `openspec/config.yaml` 的默认 Schema 设为 `proposal-driven`。
 
+**PowerShell（远端一行命令，在当前项目下直接弹出交互向导）：**
+```powershell
+irm https://raw.githubusercontent.com/marble810/opsx-schema-driven/main/scripts/install.ps1 | iex
+```
+
 **PowerShell（本地克隆后运行）：**
 ```powershell
 git clone https://github.com/marble810/opsx-schema-driven.git
-.\opsx-schema-driven\scripts\install.ps1 -InitProject -ProjectPath "F:\Git\YourProject"
+.\opsx-schema-driven\scripts\install.ps1
 ```
 
-**PowerShell（远端一行命令直接在当前项目下交互式初始化）：**
-```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/marble810/opsx-schema-driven/main/scripts/install.ps1))) -InitProject
-```
-
-**Bash（Linux / macOS / Git Bash）：**
+**Bash（Linux / macOS / Git Bash 远端一行命令）：**
 ```bash
-./scripts/install.sh --init-project --project-path /path/to/your-project
+bash <(curl -fsSL https://raw.githubusercontent.com/marble810/opsx-schema-driven/main/scripts/install.sh)
 ```
 
 ---
@@ -100,8 +100,8 @@ git clone https://github.com/marble810/opsx-schema-driven.git
 - **Linux / macOS**: `${XDG_DATA_HOME:-~/.local/share}/openspec/schemas/proposal-driven`
 
 ```powershell
-# PowerShell：复制安装到本机全局（默认模式，即使后续删掉本仓库也不受影响）
-.\scripts\install.ps1
+# PowerShell：复制安装到本机全局（即使后续删掉本仓库也不受影响）
+.\scripts\install.ps1 -Global
 
 # PowerShell：或者用 Junction 软链接到本仓库（适合经常微调模板、希望全机实时生效）
 .\scripts\install.ps1 -Link
@@ -109,7 +109,7 @@ git clone https://github.com/marble810/opsx-schema-driven.git
 
 ```bash
 # Bash：复制安装到本机全局
-./scripts/install.sh
+./scripts/install.sh --global
 
 # Bash：或者用 Symlink 软链接到本仓库
 ./scripts/install.sh --link
