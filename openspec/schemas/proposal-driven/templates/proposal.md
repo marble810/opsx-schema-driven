@@ -2,25 +2,27 @@
 
 ## Why
 
-<!-- 1-2 句话说明解决什么问题或机会，以及为什么现在做（必填，请勿修改本节标题） -->
+<!-- Required (do not rename heading): 1-3 sentences stating the concrete problem or opportunity and why now. Strip all HTML comments from final output. -->
 
 ## What Changes
 
-<!-- 具体交付物与结构变更（模块、接口、配置、移除项）。破坏性变更请标注 **BREAKING**（必填，请勿修改本节标题） -->
+<!-- Required (do not rename heading): Structural deliverables (added/modified/removed modules, APIs, configs, or files).
+     Prefix breaking changes with **BREAKING**. List structural changes only, not runtime flows. -->
 
 ## Behavior
 
-<!-- 可观测的系统行为、不变量与验收准则（输入/前置条件 → 预期输出/错误处理）。
-     用简洁列表编写，聚焦外部可验证的行为契约，不要简单重复 What Changes 的文件清单，也不要使用 spec/scenario 语法。 -->
+<!-- Required: Black-box observable runtime/system behavior, invariants, and acceptance criteria.
+     Format: [Trigger / Precondition] -> [Expected Output / State Transition / Error Handling].
+     Must be verifiable without reading internal implementation code. Do NOT repeat the file list from What Changes, and do NOT use spec/scenario syntax. -->
 
 ## Impact
 
-<!-- 受影响的代码、API、依赖、系统兼容性与迁移边界 -->
+<!-- Required: Blast radius — affected callers, external APIs, dependencies, compatibility, and migration boundaries. -->
 
 ## Non-Goals
 
-<!-- 可选：明确不在本次改动范围内的事项。如无请删除本节。 -->
+<!-- Optional: Explicit scope exclusions to prevent scope creep. Delete entire section if none. -->
 
 ## Open Questions
 
-<!-- 可选：可延后确认的未知项。如无请删除本节。 -->
+<!-- Optional: Non-blocking unknowns that can be deferred. Delete entire section if none. -->

@@ -1,0 +1,14 @@
+# OpenSpec active changes (never commit probe or scratch changes in schema repo)
+openspec/changes/
+
+# Temporary verification / smoke test directories
+.tmp/
+tmp/
+probe/
+.probe/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*~

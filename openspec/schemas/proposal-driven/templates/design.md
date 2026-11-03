@@ -2,24 +2,26 @@
 
 ## Context
 
-<!-- 当前技术状态与约束条件。动机请参考 proposal.md，不要在此重复（必填） -->
+<!-- Required: Current technical baseline, architectural constraints, and key assumptions. Reference proposal.md for business motivation rather than restating it.
+     [Short-circuit rule] For small changes with zero architectural ambiguity beyond proposal.md, write a single line here and in Decisions ("Same as proposal.md; single straightforward implementation path with no architectural ambiguity.") and remove all optional sections.
+     Strip all HTML comments from final output. -->
 
 ## Decisions
 
-<!-- 关键技术决策、选型理由（为什么选 X 而不是 Y）以及排除的备选方案（必填） -->
+<!-- Required: Key technical choices. State [Choose X over Y], the rationale for X, and why alternative Y was rejected. -->
 
 ## Risks / Trade-offs
 
-<!-- 可选：[风险或权衡] -> [缓解措施]。如改动简单无需此节可删除。 -->
+<!-- Optional: [Concrete risk or trade-off cost] -> [Mitigation or fallback]. Delete entire section if trivial. -->
 
 ## Validation
 
-<!-- 具体的验证步骤、回归检查顺序与边界条件测试方式（必填） -->
+<!-- Required: Executable verification plan — automated tests, manual check sequence, regression scope, and boundary/error conditions. -->
 
 ## Rollback
 
-<!-- 可选：部署迁移步骤，以及出现问题时的安全回滚与恢复方案。如无特殊回滚需求可删除。 -->
+<!-- Optional: Safe revert mechanism, feature flag, or recovery steps if issues occur. Delete entire section if trivial. -->
 
 ## Open Questions
 
-<!-- 可选：可延后决定的技术未知项。如无请删除本节。 -->
+<!-- Optional: Deferred low-level technical unknowns. Delete entire section if none. -->

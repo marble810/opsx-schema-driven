@@ -1,54 +1,63 @@
 name: proposal-driven
 version: 1
-description: Proposal-driven OpenSpec workflow - proposals are the source of truth; specs are disabled; includes tasks tracking and isolated FOR-HUMAN.md summary
+description: Proposal-driven OpenSpec workflow - proposals are the source of truth; specs are disabled; English LLM contracts with tasks tracking and isolated Chinese FOR-HUMAN.md summary
 artifacts:
   - id: proposal
     generates: proposal.md
     description: Primary planning contract - motivation, scope, observable behavior, and impact of a change
     template: proposal.md
     instruction: |
-      You are drafting the proposal for a change in Simplified Chinese.
-      This workflow is proposal-driven: `proposal.md` is the primary source of
-      truth for requirements. Separate specs are disabled.
+      You are a systems architect drafting `proposal.md` in concise technical
+      English. In this workflow, `proposal.md` is the authoritative source of
+      truth for requirements, scope, and observable behavior. Separate `specs/`
+      are disabled.
 
-      ## Hard rules
-      - Do NOT create, modify, or reference anything under `openspec/specs/` or
-        a change-local `specs/` directory.
-      - Do NOT write delta requirements, `### Requirement:` blocks, or
-        `#### Scenario:` blocks.
+      ## Hard invariants (parser & workflow constraints)
+      - Do NOT create, modify, or reference anything under `openspec/specs/` or a
+        change-local `specs/` directory.
+      - Do NOT write spec-delta syntax (`### Requirement:`, `#### Scenario:`, or
+        `ADDED/MODIFIED/REMOVED Requirements`).
       - Do NOT run or suggest spec-related OpenSpec commands.
-      - Keep the exact `## Why` and `## What Changes` headings (required by
-        `openspec validate`).
+      - Preserve the exact level-2 headings `## Why` and `## What Changes`
+        (strictly required by the `openspec validate` parser).
+      - Strip all HTML template comments (`<!-- ... -->`) and remove unused
+        optional sections in the final output.
 
-      ## Research before writing
-      1. Treat any `<project_context>` and `<rules>` in this instruction
-         envelope as constraints; never copy them into the output file.
-      2. Inspect relevant code, tests, configuration, and docs outside
-         `openspec/` proportionally to the change. Keep it read-only.
-      3. Separate verified facts from assumptions. If critical scope or impact
-         is unclear, ask before inventing facts.
+      ## Pre-writing grounding protocol
+      1. Treat any `project_context` and `rules` blocks in this prompt envelope as
+        binding constraints; never copy or echo them into `proposal.md`.
+      2. Inspect relevant code, configs, tests, and docs outside `openspec/`
+        proportionally to the change (strictly read-only) so module names,
+        interfaces, and boundaries are anchored in codebase reality.
+      3. Separate verified codebase facts from assumptions. If critical scope or
+        expected behavior is ambiguous, ask the user before inventing requirements.
 
-      ## Output contract
-      Write `proposal.md` in Simplified Chinese with these sections:
-      - **Why** *(required)*: 1-2 sentences on the problem or opportunity and
-        why now.
-      - **What Changes** *(required)*: Concrete deliverables and structural
-        changes (modules, APIs, configs, removals). Mark breaking changes with
-        **BREAKING**.
-      - **Behavior** *(required)*: Observable runtime/system behavior,
-        invariants, and acceptance criteria as concise bullets. State input/
-        precondition, expected output, and error/fallback behavior when
-        relevant. Do not merely repeat the deliverable list from `What Changes`.
-      - **Impact** *(required)*: Affected code, APIs, dependencies, systems,
-        compatibility, and migration boundaries.
-      - **Non-Goals** *(optional)*: Explicitly out-of-scope items. Omit if none.
-      - **Open Questions** *(optional)*: Deferrable unknowns. Omit if none.
+      ## Output contract (strictly orthogonal sections, in English)
+      Write `proposal.md` in concise technical English with these sections:
+      - **Why** *(required)*: 1-3 sentences stating the concrete problem or
+        opportunity and why it must be addressed now.
+      - **What Changes** *(required)*: Structural delta — concrete deliverables,
+        modules, APIs, configs, or removals. Prefix breaking changes with
+        `**BREAKING**`. List *what* is touched structurally, not runtime logic.
+      - **Behavior** *(required)*: Black-box observable runtime/system behavior,
+        invariants, and acceptance criteria as concise bullets (`[Trigger/Input] ->
+        [Expected Output / State Transition / Error Handling]`). Do NOT repeat
+        the file/module list from `What Changes`.
+      - **Impact** *(required)*: Blast radius — affected callers, external APIs,
+        dependencies, compatibility, and migration boundaries.
+      - **Non-Goals** *(optional)*: Explicit scope exclusions to prevent scope
+        creep. Omit section if none.
+      - **Open Questions** *(optional)*: Deferrable unknowns that do not block
+        initial design. Omit section if none.
 
-      ## Done check
-      - [ ] Every `What Changes` item has a matching `Behavior` or `Impact`.
-      - [ ] Every `Behavior` bullet is testable or observable without reading
+      ## Self-check gate (Done check)
+      - [ ] Exact headings `## Why` and `## What Changes` are intact.
+      - [ ] Every structural item in `What Changes` maps to a behavioral contract
+            in `Behavior` or blast radius in `Impact` without redundant copy-paste.
+      - [ ] Every `Behavior` bullet is falsifiable and verifiable without reading
             internal implementation code.
-      - [ ] No spec-format content and no `openspec/specs/` reference exists.
+      - [ ] Zero `openspec/specs/` references, zero spec-delta blocks, and zero
+            leftover `<!-- ... -->` template comments.
     requires: []
 
   - id: design
@@ -56,32 +65,48 @@ artifacts:
     description: Technical design decisions, trade-offs, validation, and rollback strategy
     template: design.md
     instruction: |
-      Write technical design notes in Simplified Chinese explaining HOW to
-      implement and verify the change.
+      You are drafting `design.md` in concise technical English to bridge
+      `proposal.md` (WHAT & WHY) to implementation (HOW & WHY THIS WAY).
 
-      ## When full design is needed
-      Write full design notes when the change involves multiple modules or
-      services, a new external dependency, state/data migration, security or
-      performance complexity, or ambiguity that benefits from a decision record.
-      For small/trivial changes where `proposal.md` already covers everything,
-      write a brief note under `Context` and `Decisions` (e.g., "同 proposal.md，
-      无额外架构分歧") and omit optional sections so the workflow status completes
-      cleanly without bloat.
+      ## Complexity triage & short-circuit rule
+      - **Full design mode**: Write full design notes when the change spans
+        multiple modules/services, introduces new dependencies, mutates persistent
+        state/data formats, involves performance/security trade-offs, or has
+        multiple competing implementation approaches.
+      - **Short-circuit mode (small/self-evident changes)**: Because OpenSpec
+        tracks `design.md` in workflow status, do not skip creating the file.
+        When `proposal.md` already leaves zero architectural ambiguity, write a
+        one-line pointer under `## Context` and `## Decisions` (e.g., `Same as
+        proposal.md; single straightforward implementation path with no
+        architectural ambiguity.`), state the check under `## Validation`, and
+        delete all optional sections so status completes cleanly without token
+        bloat.
 
-      ## Output contract
-      - **Context** *(required)*: Current technical state and constraints that
-        shape the approach. Reference `proposal.md` for motivation instead of
-        restating it.
-      - **Decisions** *(required)*: Key technical choices with rationale (why X
-        over Y) and rejected alternatives.
-      - **Risks / Trade-offs** *(optional)*: `[Risk] -> [Mitigation]`. Omit if
-        trivial.
-      - **Validation** *(required)*: Concrete verification steps, regression
-        checks, and boundary conditions.
-      - **Rollback** *(optional)*: Safe fallback, recovery, or rollback steps if
-        issues occur. Omit if trivial.
-      - **Open Questions** *(optional)*: Only deferrable technical unknowns.
-        Omit if none.
+      ## Output contract (in English)
+      - **Context** *(required)*: Current technical baseline, architectural
+        constraints, and assumptions shaping the implementation. Reference
+        `proposal.md` rather than restating business motivation.
+      - **Decisions** *(required)*: Key technical choices formatted with explicit
+        rationale and rejected alternatives (`Choose X over Y: because...;
+        rejected Y because...`).
+      - **Risks / Trade-offs** *(optional)*: Concrete risks or trade-offs paired
+        with mitigations (`[Risk / Cost] -> [Mitigation / Fallback]`). Omit
+        section if trivial.
+      - **Validation** *(required)*: Executable verification plan — automated test
+        cases, manual check sequence, regression scope, and boundary conditions.
+      - **Rollback** *(optional)*: Safe revert mechanism, feature toggle, or
+        recovery steps if issues arise. Omit section if trivial.
+      - **Open Questions** *(optional)*: Deferred implementation-level unknowns.
+        Omit section if none.
+
+      ## Self-check gate (Done check)
+      - [ ] Zero restatement of `proposal.md` motivation or deliverable lists.
+      - [ ] Every non-trivial decision records why competing alternatives were
+            rejected.
+      - [ ] `Validation` specifies concrete, actionable checks rather than vague
+            statements.
+      - [ ] All `<!-- ... -->` template comments and unused optional sections are
+            removed.
     requires:
       - proposal
 
@@ -90,21 +115,28 @@ artifacts:
     description: Implementation checklist with trackable checkboxes
     template: tasks.md
     instruction: |
-      Create the implementation task list in Simplified Chinese that breaks down
-      the work from `proposal.md` and `design.md` (if present).
+      You are compiling `proposal.md` and `design.md` (if present) into an
+      ordered, trackable implementation checklist (`tasks.md`) in concise
+      technical English.
 
-      Before writing tasks, check `proposal.md` and `design.md` for Open
-      Questions. If any open question would change what gets built, resolve it
-      with the user first rather than baking in an unstated assumption.
+      ## Pre-generation gate
+      1. Check `proposal.md` and `design.md` for any `## Open Questions`. If an
+        unresolved question would alter what gets built or task ordering, resolve
+        it with the user FIRST rather than baking in silent assumptions.
+      2. Never read or reference `FOR-HUMAN.md`.
 
-      ## Formatting rules (parsed by OpenSpec progress tracker)
-      - Group related tasks under `## <N>. <Group Name>` headings.
-      - Each task MUST be a checkbox: `- [ ] X.Y <Task description and how to verify>`.
-      - Keep tasks small enough to complete and verify incrementally.
-      - Order tasks by dependency (what must be done first?).
-      - Include relevant test and documentation updates within the task group
-        that introduces the work, leaving the final group for end-to-end
-        verification or cleanup.
+      ## Formatting & decomposition contract (parsed by OpenSpec tracker)
+      - Group related tasks by topological execution phase under
+        `## <N>. <Group Name>` headings (e.g., foundational structures -> core
+        logic -> integration -> final verification & cleanup).
+      - Every task line MUST use exact checkbox syntax with non-empty text:
+        `- [ ] X.Y <Concrete implementation action + verification criteria>`.
+      - Keep each task atomic: small enough to implement and verify in a single
+        focused step.
+      - Co-locate unit/module tests and doc updates within the task group that
+        introduces the work; reserve the final group for end-to-end verification
+        and cleanup.
+      - Strip all `<!-- ... -->` template comments.
     requires:
       - proposal
 
@@ -113,21 +145,34 @@ artifacts:
     description: Human-only summary in plain Simplified Chinese (isolated from LLM context)
     template: for-human.md
     instruction: |
-      Create `FOR-HUMAN.md` in plain Simplified Chinese for human readers only.
-      Read `proposal.md` and `design.md` (if present) to synthesize this summary.
+      You are writing `FOR-HUMAN.md` in plain Simplified Chinese as a cognitive
+      summary strictly for human readers. Read the English `proposal.md` and
+      `design.md` (if present) and synthesize them into natural, easy-to-scan
+      Simplified Chinese.
 
-      ## Writing rules
-      - Write in Simplified Chinese, using short sentences and plain, everyday
-        words.
-      - Give context first: what the background/problem was, what this change
-        does, and why it exists.
-      - Summarize the core guarantees, how to verify the result, and what to do
-        (rollback/recovery) if something goes wrong.
-      - Use the project's established terms consistently; do not invent synonyms.
-      - Do not include secrets, file-by-file code diffs, or ephemeral details
-        that will quickly go stale.
-      - Keep the top warning banner intact. Never read, quote, or copy
-        `FOR-HUMAN.md` as LLM context in subsequent steps.
+      ## Context isolation rule
+      - Keep the top warning blockquote intact verbatim.
+      - `FOR-HUMAN.md` is a write-only sink for LLMs: never read, quote, or feed
+        `FOR-HUMAN.md` back into LLM context in subsequent steps.
+
+      ## Cognitive translation & writing rules
+      - Optimize for 60-second human comprehension: use short sentences and plain,
+        natural Simplified Chinese without prompt jargon or stiff translationese.
+      - Follow a 4-part mental model:
+        1. **背景与目的**: What the prior state/pain point was, what this change
+           does, and why it exists.
+        2. **核心改动与保证**: High-level mechanism and the core invariants/guarantees
+           that hold after the change.
+        3. **怎么验证**: How to verify correctness (distinguishing automated regression
+           checks from manual confirmation).
+        4. **出问题怎么办**: How to roll back, disable, or recover safely if an
+           issue occurs.
+      - Keep exact code identifiers (class/function/config names) in their
+        original English form; use the project's established domain terms
+        consistently and never invent synonyms.
+      - Omit ephemeral details that rot quickly (line numbers, raw code diffs,
+        secrets, or temporary debug steps).
+      - Strip all `<!-- ... -->` template comments.
     requires:
       - proposal
 
@@ -137,12 +182,16 @@ apply:
   instruction: |
     Implement the change using `proposal.md` as the source of truth for behavior
     and scope, `design.md` (if present) for technical decisions, and `tasks.md`
-    as the execution checklist.
-    - NEVER open, read, quote, or copy `FOR-HUMAN.md` (it is strictly for human
-      readers).
-    - Do NOT create `openspec/specs/` files or spec-format requirements.
-    - Work through pending tasks in `tasks.md` in order and mark `- [x]` as each
-      task is verified.
-    - If implementation details or verification steps change during coding,
-      update `FOR-HUMAN.md` at the very end before archiving so the human
-      summary stays accurate.
+    as the sequential execution checklist.
+    - **Context isolation**: NEVER open, read, quote, or copy `FOR-HUMAN.md` as
+      LLM context during implementation (it is strictly for human readers).
+    - **No spec drift**: Do NOT create `openspec/specs/` files or spec-format
+      requirements.
+    - **Incremental execution**: Work through pending `- [ ]` tasks in `tasks.md`
+      in dependency order; mark each task `- [x]` immediately after its
+      verification condition passes.
+    - **Drift synchronization**: If coding reveals that a design or verification
+      step must deviate from the plan, update the relevant planning artifact first
+      (confirming with the user if scope/behavior changes), and refresh
+      `FOR-HUMAN.md` at the very end before archiving so the human summary stays
+      accurate.
