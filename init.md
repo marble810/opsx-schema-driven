@@ -1,5 +1,7 @@
 # init.md — 把 `proposal-driven` OpenSpec schema 完善、打包并发布
 
+> **已完成：v1.0.0 @ 2026-11-03，远端 https://github.com/marble810/opsx-schema-driven**
+>
 > 这是一份**给 agent 执行的启动简报**。工作目录：`F:\Git\opsx-schema-driven`（空目录）。
 > 读完本文件即可开工；文中所有路径、命令、预期输出都已在本机实测过（OpenSpec 1.14.0）。
 > 与用户沟通用简体中文；每完成一个 Phase 停下来汇报，等确认再进下一个 Phase。
@@ -254,13 +256,13 @@ git add -A; git commit -m "feat: package proposal-driven schema as standalone re
 
 ## 9. 完成定义（DoD）
 
-- [ ] 仓库可克隆、`openspec schema validate` 通过、`doctor` 通过
-- [ ] `scripts/verify.*` 一键跑通 e2e（含 apply 进度 > 0）
-- [ ] README 覆盖：痛点、依赖图、安装三法、隔离约定与上限、支持版本、卸载
-- [ ] CHANGELOG v1.0.0 写明相对试用版的变化
-- [ ] 远端仓库 + `v1.0.0` tag + Release notes 已发布，且经用户确认
-- [ ] 至少一个真实项目完成"用户级安装 + `schema: proposal-driven`"验证
-- [ ] `init.md` 顶部标注完成状态，仓库 `git status` 干净
+- [x] 仓库可克隆、`openspec schema validate` 通过、`doctor` 通过
+- [x] `scripts/verify.*` 一键跑通 e2e（含 apply 进度 > 0）
+- [x] README 覆盖：痛点、依赖图、安装三法、隔离约定与上限、支持版本、卸载
+- [x] CHANGELOG v1.0.0 写明相对试用版的变化
+- [x] 远端仓库 + `v1.0.0` tag + Release notes 已发布，且经用户确认
+- [x] 至少一个真实项目完成"用户级安装 + `schema: proposal-driven`"验证
+- [x] `init.md` 顶部标注完成状态，仓库 `git status` 干净
 
 ---
 
