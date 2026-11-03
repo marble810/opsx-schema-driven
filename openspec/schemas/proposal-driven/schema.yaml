@@ -1,0 +1,148 @@
+name: proposal-driven
+version: 1
+description: Proposal-driven OpenSpec workflow - proposals are the source of truth; specs are disabled; includes tasks tracking and isolated FOR-HUMAN.md summary
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Primary planning contract - motivation, scope, observable behavior, and impact of a change
+    template: proposal.md
+    instruction: |
+      You are drafting the proposal for a change in Simplified Chinese.
+      This workflow is proposal-driven: `proposal.md` is the primary source of
+      truth for requirements. Separate specs are disabled.
+
+      ## Hard rules
+      - Do NOT create, modify, or reference anything under `openspec/specs/` or
+        a change-local `specs/` directory.
+      - Do NOT write delta requirements, `### Requirement:` blocks, or
+        `#### Scenario:` blocks.
+      - Do NOT run or suggest spec-related OpenSpec commands.
+      - Keep the exact `## Why` and `## What Changes` headings (required by
+        `openspec validate`).
+
+      ## Research before writing
+      1. Treat any `<project_context>` and `<rules>` in this instruction
+         envelope as constraints; never copy them into the output file.
+      2. Inspect relevant code, tests, configuration, and docs outside
+         `openspec/` proportionally to the change. Keep it read-only.
+      3. Separate verified facts from assumptions. If critical scope or impact
+         is unclear, ask before inventing facts.
+
+      ## Output contract
+      Write `proposal.md` in Simplified Chinese with these sections:
+      - **Why** *(required)*: 1-2 sentences on the problem or opportunity and
+        why now.
+      - **What Changes** *(required)*: Concrete deliverables and structural
+        changes (modules, APIs, configs, removals). Mark breaking changes with
+        **BREAKING**.
+      - **Behavior** *(required)*: Observable runtime/system behavior,
+        invariants, and acceptance criteria as concise bullets. State input/
+        precondition, expected output, and error/fallback behavior when
+        relevant. Do not merely repeat the deliverable list from `What Changes`.
+      - **Impact** *(required)*: Affected code, APIs, dependencies, systems,
+        compatibility, and migration boundaries.
+      - **Non-Goals** *(optional)*: Explicitly out-of-scope items. Omit if none.
+      - **Open Questions** *(optional)*: Deferrable unknowns. Omit if none.
+
+      ## Done check
+      - [ ] Every `What Changes` item has a matching `Behavior` or `Impact`.
+      - [ ] Every `Behavior` bullet is testable or observable without reading
+            internal implementation code.
+      - [ ] No spec-format content and no `openspec/specs/` reference exists.
+    requires: []
+
+  - id: design
+    generates: design.md
+    description: Technical design decisions, trade-offs, validation, and rollback strategy
+    template: design.md
+    instruction: |
+      Write technical design notes in Simplified Chinese explaining HOW to
+      implement and verify the change.
+
+      ## When full design is needed
+      Write full design notes when the change involves multiple modules or
+      services, a new external dependency, state/data migration, security or
+      performance complexity, or ambiguity that benefits from a decision record.
+      For small/trivial changes where `proposal.md` already covers everything,
+      write a brief note under `Context` and `Decisions` (e.g., "同 proposal.md，
+      无额外架构分歧") and omit optional sections so the workflow status completes
+      cleanly without bloat.
+
+      ## Output contract
+      - **Context** *(required)*: Current technical state and constraints that
+        shape the approach. Reference `proposal.md` for motivation instead of
+        restating it.
+      - **Decisions** *(required)*: Key technical choices with rationale (why X
+        over Y) and rejected alternatives.
+      - **Risks / Trade-offs** *(optional)*: `[Risk] -> [Mitigation]`. Omit if
+        trivial.
+      - **Validation** *(required)*: Concrete verification steps, regression
+        checks, and boundary conditions.
+      - **Rollback** *(optional)*: Safe fallback, recovery, or rollback steps if
+        issues occur. Omit if trivial.
+      - **Open Questions** *(optional)*: Only deferrable technical unknowns.
+        Omit if none.
+    requires:
+      - proposal
+
+  - id: tasks
+    generates: tasks.md
+    description: Implementation checklist with trackable checkboxes
+    template: tasks.md
+    instruction: |
+      Create the implementation task list in Simplified Chinese that breaks down
+      the work from `proposal.md` and `design.md` (if present).
+
+      Before writing tasks, check `proposal.md` and `design.md` for Open
+      Questions. If any open question would change what gets built, resolve it
+      with the user first rather than baking in an unstated assumption.
+
+      ## Formatting rules (parsed by OpenSpec progress tracker)
+      - Group related tasks under `## <N>. <Group Name>` headings.
+      - Each task MUST be a checkbox: `- [ ] X.Y <Task description and how to verify>`.
+      - Keep tasks small enough to complete and verify incrementally.
+      - Order tasks by dependency (what must be done first?).
+      - Include relevant test and documentation updates within the task group
+        that introduces the work, leaving the final group for end-to-end
+        verification or cleanup.
+    requires:
+      - proposal
+
+  - id: for-human
+    generates: FOR-HUMAN.md
+    description: Human-only summary in plain Simplified Chinese (isolated from LLM context)
+    template: for-human.md
+    instruction: |
+      Create `FOR-HUMAN.md` in plain Simplified Chinese for human readers only.
+      Read `proposal.md` and `design.md` (if present) to synthesize this summary.
+
+      ## Writing rules
+      - Write in Simplified Chinese, using short sentences and plain, everyday
+        words.
+      - Give context first: what the background/problem was, what this change
+        does, and why it exists.
+      - Summarize the core guarantees, how to verify the result, and what to do
+        (rollback/recovery) if something goes wrong.
+      - Use the project's established terms consistently; do not invent synonyms.
+      - Do not include secrets, file-by-file code diffs, or ephemeral details
+        that will quickly go stale.
+      - Keep the top warning banner intact. Never read, quote, or copy
+        `FOR-HUMAN.md` as LLM context in subsequent steps.
+    requires:
+      - proposal
+
+apply:
+  requires: [proposal, tasks]
+  tracks: tasks.md
+  instruction: |
+    Implement the change using `proposal.md` as the source of truth for behavior
+    and scope, `design.md` (if present) for technical decisions, and `tasks.md`
+    as the execution checklist.
+    - NEVER open, read, quote, or copy `FOR-HUMAN.md` (it is strictly for human
+      readers).
+    - Do NOT create `openspec/specs/` files or spec-format requirements.
+    - Work through pending tasks in `tasks.md` in order and mark `- [x]` as each
+      task is verified.
+    - If implementation details or verification steps change during coding,
+      update `FOR-HUMAN.md` at the very end before archiving so the human
+      summary stays accurate.
