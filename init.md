@@ -1,8 +1,8 @@
 # init.md — 把 `proposal-driven` OpenSpec schema 完善、打包并发布
 
-> **已完成：v1.0.0 @ 2026-11-03，远端 https://github.com/marble810/opsx-schema-driven**
+> **已完成：v1.0.0 @ 2026-11-03，远端 https://github.com/marble810/opsx-proposal-driven**
 >
-> 这是一份**给 agent 执行的启动简报**。工作目录：`F:\Git\opsx-schema-driven`（空目录）。
+> 这是一份**给 agent 执行的启动简报**。工作目录：`F:\Git\opsx-proposal-driven`（空目录）。
 > 读完本文件即可开工；文中所有路径、命令、预期输出都已在本机实测过（OpenSpec 1.14.0）。
 > 与用户沟通用简体中文；每完成一个 Phase 停下来汇报，等确认再进下一个 Phase。
 
@@ -14,7 +14,7 @@
 
 完成后满足：
 
-1. `F:\Git\opsx-schema-driven` 是一个有提交历史的 git 仓库，远端为 GitHub 上新建的 `marble810/opsx-schema-driven`（名称/可见性见 §6 决策点）。
+1. `F:\Git\opsx-proposal-driven` 是一个有提交历史的 git 仓库，远端为 GitHub 上新建的 `marble810/opsx-proposal-driven`（名称/可见性见 §6 决策点）。
 2. 仓库内容通过 `openspec schema validate proposal-driven`，且 `openspec schema which` 解析到仓库内副本。
 3. 提供**一条命令**级别的安装方式（Windows junction / Unix symlink 指向用户级目录），并有 README 说明三种安装路径的取舍。
 4. 打第一个 tag（默认 `v1.0.0`）并写 Release notes；**打 tag 前必须经用户确认**。
@@ -106,7 +106,7 @@ $ openspec schemas
 目标目录树（`init.md` 保留在根，作为过程记录）：
 
 ```
-F:\Git\opsx-schema-driven\
+F:\Git\opsx-proposal-driven\
 ├── init.md
 ├── README.md                 # 门面：它解决什么、怎么装、怎么验证、已知取舍
 ├── LICENSE                   # 见 §6 决策点，默认 MIT
@@ -146,7 +146,7 @@ openspec --version
 git config --get user.name; git config --get user.email
 gh auth status
 Test-Path 'F:\Git\UnityScriptDev\Avatar\MagicMask\openspec\schemas\proposal-driven\schema.yaml'
-gh repo view marble810/opsx-schema-driven   # 期望 404 / not found；若已存在，停下来问用户
+gh repo view marble810/opsx-proposal-driven   # 期望 404 / not found；若已存在，停下来问用户
 ```
 
 把结果贴给用户；任何一项不符合就停。
@@ -167,7 +167,7 @@ gh repo view marble810/opsx-schema-driven   # 期望 404 / not found；若已存
 ### P2 · 自举与 git 历史
 
 ```powershell
-cd F:\Git\opsx-schema-driven
+cd F:\Git\opsx-proposal-driven
 printf 'schema: proposal-driven\n' > openspec/config.yaml
 openspec doctor          # 期望 OpenSpec root: ok
 git init -b main
@@ -203,7 +203,7 @@ git add -A; git commit -m "feat: package proposal-driven schema as standalone re
 
 ### P4 · 发布（每一步都要用户点头）
 
-1. `gh repo create marble810/opsx-schema-driven --<visibility> --source . --remote origin`（visibility 按 §6 决策）。
+1. `gh repo create marble810/opsx-proposal-driven --<visibility> --source . --remote origin`（visibility 按 §6 决策）。
 2. `git push -u origin main`；`gh repo view --web` 结果确认。
 3. 写 `v1.0.0` 的 Release notes（内容 = CHANGELOG 的 v1.0.0 段 + 安装三行命令），**先贴给用户看**。
 4. `git tag -a v1.0.0 -m "proposal-driven v1.0.0"` + `git push origin v1.0.0` + `gh release create`。
@@ -221,7 +221,7 @@ git add -A; git commit -m "feat: package proposal-driven schema as standalone re
 
 | # | 决策 | 默认建议 |
 |---|---|---|
-| 1 | 仓库名 | `opsx-schema-driven`（已按此建目录）；若想以后放多个 schema，叫 `opsx-schemas` 更合适 —— 让用户选 |
+| 1 | 仓库名 | `opsx-proposal-driven`（已按此建目录）；若想以后放多个 schema，叫 `opsx-schemas` 更合适 —— 让用户选 |
 | 2 | 可见性 | public（"发布为可复用 schema"的字面意思）；若要保留私人习惯（强制中文），private 也合理 |
 | 3 | LICENSE | MIT |
 | 4 | schema 名 | 保持 `proposal-driven`（不改名，避免破坏 3 个项目） |

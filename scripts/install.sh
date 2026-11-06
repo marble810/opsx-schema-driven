@@ -11,7 +11,7 @@ GLOBAL_INSTALL=false
 USE_LINK=false
 TOOLS=""
 YES=false
-REPO_URL="https://raw.githubusercontent.com/marble810/opsx-schema-driven/main"
+REPO_URL="https://raw.githubusercontent.com/marble810/opsx-proposal-driven/main"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

@@ -48,7 +48,7 @@ function Invoke-OpsxSchemaInstall {
         [switch]$Link,
         [string]$Tools = "",
         [switch]$Yes,
-        [string]$RepoUrl = "https://raw.githubusercontent.com/marble810/opsx-schema-driven/main"
+        [string]$RepoUrl = "https://raw.githubusercontent.com/marble810/opsx-proposal-driven/main"
     )
 
     $ErrorActionPreference = "Stop"

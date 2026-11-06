@@ -1,4 +1,4 @@
-# opsx-schema-driven (`proposal-driven` OpenSpec Schema)
+# opsx-proposal-driven (`proposal-driven` OpenSpec Schema)
 
 以 **`proposal.md` 为唯一需求真相源**、禁用 `specs/` 增量语法、内置 `tasks.md` 进度追踪与 `FOR-HUMAN.md` 人类中文摘要的 [OpenSpec](https://github.com/Fission-AI/OpenSpec) 工作流 Schema（实测支持 OpenSpec `1.14.0`）。
 
@@ -12,12 +12,12 @@
 
 **PowerShell：**
 ```powershell
-irm https://raw.githubusercontent.com/marble810/opsx-schema-driven/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/marble810/opsx-proposal-driven/main/scripts/install.ps1 | iex
 ```
 
 **Bash (Linux / macOS / Git Bash)：**
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/marble810/opsx-schema-driven/main/scripts/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/marble810/opsx-proposal-driven/main/scripts/install.sh)
 ```
 
 ---
@@ -25,8 +25,8 @@ bash <(curl -fsSL https://raw.githubusercontent.com/marble810/opsx-schema-driven
 ### 2. 克隆仓库并安装（适合本机全局复用或脚本化调用）
 
 ```powershell
-git clone https://github.com/marble810/opsx-schema-driven.git
-cd opsx-schema-driven
+git clone https://github.com/marble810/opsx-proposal-driven.git
+cd opsx-proposal-driven
 
 # 方式 A：复制到本机全局目录 (%LOCALAPPDATA%\openspec\schemas\proposal-driven)
 .\scripts\install.ps1 -Global
